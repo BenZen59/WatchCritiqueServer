@@ -37,7 +37,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      expires: 60 * 60 * 24,
+      expires: 600 * 600 * 240,
     },
   })
 );
@@ -90,36 +90,36 @@ app.get('/login', (req, res) => {
   }
 });
 
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+});
+
 app.post('/login', (req, res) => {
   const { username } = req.body;
   const { password } = req.body;
-  db.query(
-    'SELECT * FROM users WHERE username = ?',
-    username,
-    (err, result) => {
-      if (err) {
-        res.send(err);
-      } else if (result.length > 0) {
-        bcrypt.compare(password, result[0].password, (error, response) => {
-          if (response) {
-            const { id } = result[0].id;
-            const token = jwt.sign({ id }, 'jwtSecret', {
-              expiresIn: 300,
-            });
-            req.session.user = result;
-            res.json({ auth: true, token, result });
-          } else {
-            res.json({
-              auth: false,
-              message: 'Wrong username/password combination',
-            });
-          }
-        });
-      } else {
-        res.json({ auth: false, message: 'No user exists' });
-      }
+  db.query('SELECT * FROM user WHERE username = ?', username, (err, result) => {
+    if (err) {
+      res.send(err);
+    } else if (result.length > 0) {
+      bcrypt.compare(password, result[0].password, (error, response) => {
+        if (response) {
+          const { id } = result[0].id;
+          const token = jwt.sign({ id }, 'jwtSecret', {
+            expiresIn: 300,
+          });
+          req.session.user = result;
+          res.json({ auth: true, token, result });
+        } else {
+          res.json({
+            auth: false,
+            message: 'Wrong username/password combination',
+          });
+        }
+      });
+    } else {
+      res.json({ auth: false, message: 'No user exists' });
     }
-  );
+  });
 });
 
 app.listen(3001, () => {
