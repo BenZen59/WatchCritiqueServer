@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql2 = require('mysql2');
+const mysql = require('mysql2/promise');
 
 const app = express();
 const cors = require('cors');
@@ -18,7 +19,22 @@ require('dotenv').config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_SCHEMA } = process.env;
 
+const db = mysql2.createConnection({
+  user: DB_USER,
+  host: DB_HOST,
+  password: DB_PASSWORD,
+  database: DB_SCHEMA,
+});
+
+const db2 = mysql.createPool({
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  database: DB_SCHEMA,
+});
+
 app.use(express.json());
+
 app.use(
   cors({
     origin: ['http://localhost:3000'],
@@ -41,11 +57,18 @@ app.use(
     },
   })
 );
-const db = mysql2.createConnection({
-  user: DB_USER,
-  host: DB_HOST,
-  password: DB_PASSWORD,
-  database: DB_SCHEMA,
+
+app.get('/addlist', async (req, res) => {
+  try {
+    const [list] = await db2.query('SELECT id, namelist FROM list');
+    if (list.length) {
+      res.status(200).json(list);
+    } else {
+      res.status(404).send('Lists not found');
+    }
+  } catch (err) {
+    res.status(500).send('Error retrieving the lists');
+  }
 });
 
 app.post('/register', (req, res) => {
