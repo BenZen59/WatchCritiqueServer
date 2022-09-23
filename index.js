@@ -58,11 +58,28 @@ app.use(
   })
 );
 
-app.get('/addlist', async (req, res) => {
+app.get('/list', async (req, res) => {
   try {
     const [list] = await db2.query('SELECT id, namelist FROM list');
     if (list.length) {
       res.status(200).json(list);
+    } else {
+      res.status(404).send('Lists not found');
+    }
+  } catch (err) {
+    res.status(500).send('Error retrieving the lists');
+  }
+});
+
+app.get('/listcontent/:idList', async (req, res) => {
+  try {
+    const { idList } = req.params;
+    const [listcontent] = await db2.query(
+      'SELECT id, namemovie, directormovie, yearmovie, picturemovie, idList FROM listcontent WHERE idList = ?',
+      [idList]
+    );
+    if (listcontent.length) {
+      res.status(200).json(listcontent);
     } else {
       res.status(404).send('Lists not found');
     }
