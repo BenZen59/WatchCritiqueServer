@@ -88,6 +88,62 @@ app.get('/listcontent/:idList', async (req, res) => {
   }
 });
 
+app.post('/list', async (req, res) => {
+  try {
+    const { namelist, idUserList } = req.body;
+    await db.query('INSERT INTO list (namelist, idUserList) VALUES (?, ?)', [
+      namelist,
+      idUserList,
+    ]);
+    res.status(201).send('Content created');
+  } catch (err) {
+    res.status(500).send('Error creating the content');
+  }
+});
+
+app.post('/listcontent', async (req, res) => {
+  try {
+    const { namemovie, directormovie, yearmovie, picturemovie, idList } =
+      req.body;
+    await db.query(
+      'INSERT INTO listcontent (namemovie, directormovie, yearmovie, picturemovie, idList) VALUES (?, ?, ?, ?, ?)',
+      [namemovie, directormovie, yearmovie, picturemovie, idList]
+    );
+    res.status(201).send('Content created');
+  } catch (err) {
+    res.status(500).send('Error creating the content');
+  }
+});
+
+app.put('/list/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { namelist, idUserList } = req.body;
+    await db.query(
+      'UPDATE list SET namelist = ?, idUserList = ? WHERE id = ?',
+      [namelist, idUserList, id]
+    );
+    res.status(201).send('Content succesfully updated');
+  } catch (err) {
+    res.status(500).send('Error updating the content');
+  }
+});
+
+app.put('/listcontent/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { namemovie, directormovie, yearmovie, picturemovie, idList } =
+      req.body;
+    await db.query(
+      'UPDATE list SET namemovie = ?, directormovie = ?, yearmovie = ?, picturemovie = ?, idList = ? WHERE id = ?',
+      [namemovie, directormovie, yearmovie, picturemovie, idList, id]
+    );
+    res.status(201).send('Content succesfully updated');
+  } catch (err) {
+    res.status(500).send('Error updating the content');
+  }
+});
+
 app.post('/register', (req, res) => {
   const { username } = req.body;
   const { password } = req.body;
