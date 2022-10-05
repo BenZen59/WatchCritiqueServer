@@ -38,7 +38,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE', 'PUT'],
     credentials: true,
   })
 );
@@ -61,6 +61,23 @@ app.use(
 app.get('/list', async (req, res) => {
   try {
     const [list] = await db2.query('SELECT id, namelist FROM list');
+    if (list.length) {
+      res.status(200).json(list);
+    } else {
+      res.status(404).send('Lists not found');
+    }
+  } catch (err) {
+    res.status(500).send('Error retrieving the lists');
+  }
+});
+
+app.get('/list/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [list] = await db2.query(
+      'SELECT id, namelist FROM list WHERE id = ?',
+      [id]
+    );
     if (list.length) {
       res.status(200).json(list);
     } else {
@@ -141,6 +158,16 @@ app.put('/listcontent/:id', async (req, res) => {
     res.status(201).send('Content succesfully updated');
   } catch (err) {
     res.status(500).send('Error updating the content');
+  }
+});
+
+app.delete('/list/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await db.query('DELETE FROM list WHERE id = ?', [id]);
+    res.status(200).send('List succesfully deleted');
+  } catch (err) {
+    res.status(500).send('Error deleting the list');
   }
 });
 
