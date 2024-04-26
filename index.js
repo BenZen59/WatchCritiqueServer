@@ -58,118 +58,118 @@ app.use(
   })
 );
 
-app.get('/list', async (req, res) => {
-  try {
-    const [list] = await db2.query('SELECT id, namelist FROM list');
-    if (list.length) {
-      res.status(200).json(list);
-    } else {
-      res.status(404).send('Lists not found');
-    }
-  } catch (err) {
-    res.status(500).send('Error retrieving the lists');
-  }
-});
+// app.get('/list', async (req, res) => {
+//   try {
+//     const [list] = await db2.query('SELECT id, namelist FROM list');
+//     if (list.length) {
+//       res.status(200).json(list);
+//     } else {
+//       res.status(404).send('Lists not found');
+//     }
+//   } catch (err) {
+//     res.status(500).send('Error retrieving the lists');
+//   }
+// });
 
-app.get('/list/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const [list] = await db2.query(
-      'SELECT id, namelist FROM list WHERE id = ?',
-      [id]
-    );
-    if (list.length) {
-      res.status(200).json(list);
-    } else {
-      res.status(404).send('Lists not found');
-    }
-  } catch (err) {
-    res.status(500).send('Error retrieving the lists');
-  }
-});
+// app.get('/list/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const [list] = await db2.query(
+//       'SELECT id, namelist FROM list WHERE id = ?',
+//       [id]
+//     );
+//     if (list.length) {
+//       res.status(200).json(list);
+//     } else {
+//       res.status(404).send('Lists not found');
+//     }
+//   } catch (err) {
+//     res.status(500).send('Error retrieving the lists');
+//   }
+// });
 
-app.get('/listcontent/:idList', async (req, res) => {
-  try {
-    const { idList } = req.params;
-    const [listcontent] = await db2.query(
-      'SELECT id, namemovie, directormovie, yearmovie, picturemovie, idList FROM listcontent WHERE idList = ?',
-      [idList]
-    );
-    if (listcontent.length) {
-      res.status(200).json(listcontent);
-    } else {
-      res.status(404).send('Lists not found');
-    }
-  } catch (err) {
-    res.status(500).send('Error retrieving the lists');
-  }
-});
+// app.get('/listcontent/:idList', async (req, res) => {
+//   try {
+//     const { idList } = req.params;
+//     const [listcontent] = await db2.query(
+//       'SELECT id, namemovie, directormovie, yearmovie, picturemovie, idList FROM listcontent WHERE idList = ?',
+//       [idList]
+//     );
+//     if (listcontent.length) {
+//       res.status(200).json(listcontent);
+//     } else {
+//       res.status(404).send('Lists not found');
+//     }
+//   } catch (err) {
+//     res.status(500).send('Error retrieving the lists');
+//   }
+// });
 
-app.post('/list', async (req, res) => {
-  try {
-    const { namelist, idUserList } = req.body;
-    await db.query('INSERT INTO list (namelist, idUserList) VALUES (?, ?)', [
-      namelist,
-      idUserList,
-    ]);
-    res.status(201).send('Content created');
-  } catch (err) {
-    res.status(500).send('Error creating the content');
-  }
-});
+// app.post('/list', async (req, res) => {
+//   try {
+//     const { namelist, idUserList } = req.body;
+//     await db.query('INSERT INTO list (namelist, idUserList) VALUES (?, ?)', [
+//       namelist,
+//       idUserList,
+//     ]);
+//     res.status(201).send('Content created');
+//   } catch (err) {
+//     res.status(500).send('Error creating the content');
+//   }
+// });
 
-app.post('/listcontent', async (req, res) => {
-  try {
-    const { namemovie, directormovie, yearmovie, picturemovie, idList } =
-      req.body;
-    await db.query(
-      'INSERT INTO listcontent (namemovie, directormovie, yearmovie, picturemovie, idList) VALUES (?, ?, ?, ?, ?)',
-      [namemovie, directormovie, yearmovie, picturemovie, idList]
-    );
-    res.status(201).send('Content created');
-  } catch (err) {
-    res.status(500).send('Error creating the content');
-  }
-});
+// app.post('/listcontent', async (req, res) => {
+//   try {
+//     const { namemovie, directormovie, yearmovie, picturemovie, idList } =
+//       req.body;
+//     await db.query(
+//       'INSERT INTO listcontent (namemovie, directormovie, yearmovie, picturemovie, idList) VALUES (?, ?, ?, ?, ?)',
+//       [namemovie, directormovie, yearmovie, picturemovie, idList]
+//     );
+//     res.status(201).send('Content created');
+//   } catch (err) {
+//     res.status(500).send('Error creating the content');
+//   }
+// });
 
-app.put('/list/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { namelist, idUserList } = req.body;
-    await db.query(
-      'UPDATE list SET namelist = ?, idUserList = ? WHERE id = ?',
-      [namelist, idUserList, id]
-    );
-    res.status(201).send('Content succesfully updated');
-  } catch (err) {
-    res.status(500).send('Error updating the content');
-  }
-});
+// app.put('/list/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { namelist, idUserList } = req.body;
+//     await db.query(
+//       'UPDATE list SET namelist = ?, idUserList = ? WHERE id = ?',
+//       [namelist, idUserList, id]
+//     );
+//     res.status(201).send('Content succesfully updated');
+//   } catch (err) {
+//     res.status(500).send('Error updating the content');
+//   }
+// });
 
-app.put('/listcontent/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { namemovie, directormovie, yearmovie, picturemovie, idList } =
-      req.body;
-    await db.query(
-      'UPDATE list SET namemovie = ?, directormovie = ?, yearmovie = ?, picturemovie = ?, idList = ? WHERE id = ?',
-      [namemovie, directormovie, yearmovie, picturemovie, idList, id]
-    );
-    res.status(201).send('Content succesfully updated');
-  } catch (err) {
-    res.status(500).send('Error updating the content');
-  }
-});
+// app.put('/listcontent/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { namemovie, directormovie, yearmovie, picturemovie, idList } =
+//       req.body;
+//     await db.query(
+//       'UPDATE list SET namemovie = ?, directormovie = ?, yearmovie = ?, picturemovie = ?, idList = ? WHERE id = ?',
+//       [namemovie, directormovie, yearmovie, picturemovie, idList, id]
+//     );
+//     res.status(201).send('Content succesfully updated');
+//   } catch (err) {
+//     res.status(500).send('Error updating the content');
+//   }
+// });
 
-app.delete('/list/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    await db.query('DELETE FROM list WHERE id = ?', [id]);
-    res.status(200).send('List succesfully deleted');
-  } catch (err) {
-    res.status(500).send('Error deleting the list');
-  }
-});
+// app.delete('/list/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     await db.query('DELETE FROM list WHERE id = ?', [id]);
+//     res.status(200).send('List succesfully deleted');
+//   } catch (err) {
+//     res.status(500).send('Error deleting the list');
+//   }
+// });
 
 app.post('/register', (req, res) => {
   const { username } = req.body;
